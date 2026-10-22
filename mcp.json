@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pirate-ship": {
+      "command": "/path/to/pirate-ship-api-mcp-server/.venv/bin/pirate-ship-mcp",
+      "args": ["mcp"]
+    }
+  }
+}
