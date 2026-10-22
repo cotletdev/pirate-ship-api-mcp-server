@@ -30,7 +30,7 @@ INPUT_SCHEMA: dict[str, Any] = {"type": "object", "properties": {}, "required": 
         "stores": [
             {
                 "id": "120044",
-                "title": "Campbell Candles",
+                "title": "Harbor Candle Co.",
                 "platform": "Etsy",
                 "platform_key": "etsy",
                 "active": True,

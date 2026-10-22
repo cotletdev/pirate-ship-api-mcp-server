@@ -2,7 +2,7 @@
 
 The recipients go up as a CSV (upload.py), CreateBatchFromUploadMutation maps its columns, and
 CompleteBatchFromUploadMutation gives the batch its title, ship-from address and package; Pirate Ship then
-validates and rates every row. Recorded 18.10.2026 on a production team account.
+validates and rates every row. Recorded 18.10.2026.
 """
 
 from __future__ import annotations

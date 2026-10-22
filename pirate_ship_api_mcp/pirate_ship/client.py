@@ -1,4 +1,4 @@
-"""Pirate Ship's web GraphQL, recorded 18.10.2026 on a production team account.
+"""Pirate Ship's web GraphQL, recorded 18.10.2026.
 
 Every operation is a persisted query: the page sends only its name and the sha256 of the query text, and
 the server runs the stored query. The hashes come from the web app's bundle and change only when Pirate

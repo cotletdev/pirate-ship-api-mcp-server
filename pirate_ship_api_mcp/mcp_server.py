@@ -16,7 +16,7 @@ INSTRUCTIONS = (
     f"{app.NAME} tools working in the user's own {app.NAME} account, through the session of their Chrome. "
     f"{app.AGENT_START} "
     "Tools that post, comment, message, invite or change settings act under the user's name and reach real "
-    "people: say what you will send and get the user's OK first. Lists page with next_cursor."
+    "people: say what you will send and get the user's OK first. Lists page with offset and total."
 )
 
 

@@ -58,7 +58,7 @@ EXAMPLE_RESPONSE: dict[str, Any] = {
             "shipment_id": "1234567891",
             "created_at": "2026-10-16T14:05:00-04:00",
             "status": "Unused",
-            "recipient": "Karen Smith",
+            "recipient": "Jordan Reyes",
             "company": "",
             "email": "",
             "address1": "100 Main St",

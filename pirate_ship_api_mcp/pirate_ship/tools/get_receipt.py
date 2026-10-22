@@ -33,7 +33,7 @@ EXAMPLE_RESPONSE: dict[str, Any] = {
     "start_balance_usd": 0,
     "end_balance_usd": 13.14,
     "billing_address": {
-        "name": "Karen Smith",
+        "name": "Jordan Reyes",
         "company": "",
         "address1": "100 Main St",
         "address2": "",
