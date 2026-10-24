@@ -1,5 +1,7 @@
 # Pirate Ship API and MCP server, self-hosted
 
+<!-- mcp-name: dev.cotlet/pirate-ship -->
+
 A **Pirate Ship API** and a **Pirate Ship MCP server** you run on your own computer, in Python, on the session of your own Google Chrome. 51 of the 57 Pirate Ship tools we run in production at [Cotlet](https://cotlet.dev/integrations/pirate-ship-api-mcp-server): USPS and UPS rates, draft labels and batches, label downloads, SCAN Forms, shipments and tracking, reports, store order import, Ship From Addresses, Saved Packages, tracking emails and label settings. The six tools that spend or refund money are [not in this version](#not-in-this-version).
 
 Pirate Ship has no public API and no official MCP server. This repo gives you both:

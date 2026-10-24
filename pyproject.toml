@@ -25,6 +25,7 @@ Source = "https://github.com/cotletdev/pirate-ship-api-mcp-server"
 
 [project.scripts]
 pirate-ship-mcp = "pirate_ship_api_mcp.cli:main"
+pirate-ship-api-mcp = "pirate_ship_api_mcp.cli:main"
 
 [build-system]
 requires = ["hatchling>=1.27"]
