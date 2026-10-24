@@ -13,6 +13,7 @@ It is for technical people who want to run it themselves, **for noncommercial us
 [![Pirate Ship MCP server](https://img.shields.io/badge/Pirate%20Ship%20MCP-51%20tools-6d4aef)](#all-51-tools)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-141318)](#requirements)
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/license-PolyForm%20Noncommercial-141318)](LICENSE)
+[![MCP Badge](https://lobehub.com/badge/mcp/cotletdev-pirate-ship-api-mcp-server)](https://lobehub.com/mcp/cotletdev-pirate-ship-api-mcp-server)
 
 ```bash
 git clone https://github.com/cotletdev/pirate-ship-api-mcp-server.git && cd pirate-ship-api-mcp-server
