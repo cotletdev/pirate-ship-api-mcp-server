@@ -18,11 +18,10 @@ It is for technical people who want to run it themselves, **for noncommercial us
 [![MCP Badge](https://lobehub.com/badge/mcp/cotletdev-pirate-ship-api-mcp-server)](https://lobehub.com/mcp/cotletdev-pirate-ship-api-mcp-server)
 
 ```bash
-git clone https://github.com/cotletdev/pirate-ship-api-mcp-server.git && cd pirate-ship-api-mcp-server
-python3 -m venv .venv && . .venv/bin/activate && pip install -e .
+uv tool install pirate-ship-api-mcp                  # or: pip install pirate-ship-api-mcp
 pirate-ship-mcp connect                            # reads your Pirate Ship session from Chrome
 pirate-ship-mcp call get_rates to_zip=10001 weight_oz=16
-claude mcp add pirate-ship -- "$PWD/.venv/bin/pirate-ship-mcp" mcp
+claude mcp add pirate-ship -- uvx pirate-ship-api-mcp mcp
 ```
 
 ## Contents
@@ -67,6 +66,17 @@ Pirate Ship's session cookie lives about a day and is renewed by use. When Pirat
 
 ## Install
 
+From [PyPI](https://pypi.org/project/pirate-ship-api-mcp/):
+
+```bash
+uv tool install pirate-ship-api-mcp       # or: pipx install pirate-ship-api-mcp, or: pip install pirate-ship-api-mcp
+pirate-ship-mcp --version
+```
+
+MCP clients can also run it with no install: `uvx pirate-ship-api-mcp mcp`.
+
+From source:
+
 ```bash
 git clone https://github.com/cotletdev/pirate-ship-api-mcp-server.git
 cd pirate-ship-api-mcp-server
@@ -80,7 +90,7 @@ With [uv](https://docs.astral.sh/uv/): `uv venv && uv pip install -e .`, then `u
 
 Setting it up with an AI agent (Claude Code, Codex, Cursor)? Open it in this folder and ask it to set up the repo: [`AGENTS.md`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/AGENTS.md) tells it every step, and it asks you only for the steps in Chrome.
 
-To update: `git pull && pip install -e .`. We copy every change of the hosted Pirate Ship tools into this repo.
+To update: `uv tool upgrade pirate-ship-api-mcp` (or `pip install -U pirate-ship-api-mcp`), from source `git pull && pip install -e .`. We copy every change of the hosted Pirate Ship tools into this repo.
 
 ## Connect your Chrome
 
@@ -147,9 +157,9 @@ The MCP server lists every tool with its input schema, a description written for
 ### Claude Code
 
 ```bash
-claude mcp add pirate-ship -- /path/to/pirate-ship-api-mcp-server/.venv/bin/pirate-ship-mcp mcp
+claude mcp add pirate-ship -- uvx pirate-ship-api-mcp mcp
 # read only:
-claude mcp add pirate-ship -- /path/to/pirate-ship-api-mcp-server/.venv/bin/pirate-ship-mcp mcp --read-only
+claude mcp add pirate-ship -- uvx pirate-ship-api-mcp mcp --read-only
 ```
 
 ### Claude Desktop
@@ -160,8 +170,8 @@ claude mcp add pirate-ship -- /path/to/pirate-ship-api-mcp-server/.venv/bin/pira
 {
   "mcpServers": {
     "pirate-ship": {
-      "command": "/path/to/pirate-ship-api-mcp-server/.venv/bin/pirate-ship-mcp",
-      "args": ["mcp"]
+      "command": "uvx",
+      "args": ["pirate-ship-api-mcp", "mcp"]
     }
   }
 }
@@ -177,8 +187,8 @@ claude mcp add pirate-ship -- /path/to/pirate-ship-api-mcp-server/.venv/bin/pira
 
 ```toml
 [mcp_servers.pirate-ship]
-command = "/path/to/pirate-ship-api-mcp-server/.venv/bin/pirate-ship-mcp"
-args = ["mcp"]
+command = "uvx"
+args = ["pirate-ship-api-mcp", "mcp"]
 ```
 
 ### Over HTTP
