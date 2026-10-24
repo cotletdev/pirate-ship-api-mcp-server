@@ -8,13 +8,13 @@ Pirate Ship has no public API and no official MCP server. This repo gives you bo
 
 - **MCP server** for Claude Code, Claude Desktop, Cursor, Codex and any MCP client, over stdio or HTTP. [Setup](#mcp-server)
 - **REST API** on `http://127.0.0.1:8787/api/v1/pirate-ship`, with OpenAPI docs at `/docs`. [Setup](#rest-api)
-- **Python**: `call("get_rates", to_zip="10001", weight_oz=16)`, plus 11 ready scripts in [`examples/`](examples/).
+- **Python**: `call("get_rates", to_zip="10001", weight_oz=16)`, plus 11 ready scripts in [`examples/`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/).
 
 It is for technical people who want to run it themselves, **for noncommercial use only** ([license](#license)). If you want it running 24/7 on a server, kept working when Pirate Ship changes its app, for a team or a business, use the [hosted version at cotlet.dev](https://cotlet.dev/integrations/pirate-ship-api-mcp-server).
 
 [![Pirate Ship MCP server](https://img.shields.io/badge/Pirate%20Ship%20MCP-51%20tools-6d4aef)](#all-51-tools)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-141318)](#requirements)
-[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/license-PolyForm%20Noncommercial-141318)](LICENSE)
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/license-PolyForm%20Noncommercial-141318)](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/LICENSE)
 [![MCP Badge](https://lobehub.com/badge/mcp/cotletdev-pirate-ship-api-mcp-server)](https://lobehub.com/mcp/cotletdev-pirate-ship-api-mcp-server)
 
 ```bash
@@ -54,7 +54,7 @@ AI agent (MCP) / script (REST, Python) ──▶ pirate-ship-mcp on your compute
 2. `pirate-ship-mcp connect` attaches to that Chrome through the Chrome DevTools Protocol, reads the pirateship.com cookies and Chrome's time zone, and saves them to `~/.config/pirate-ship-api-mcp/session.json`, readable by your user only. It never sees or stores your password.
 3. Every tool call is one of the GraphQL operations Pirate Ship's own web app sends to `ship.pirateship.com/api/graphql`, with those cookies, sent with [curl_cffi](https://github.com/lexiforest/curl_cffi), which copies Chrome's TLS fingerprint. No headless browser runs.
 
-Pirate Ship's web app sends each operation as a persisted query: its name and the sha256 of the query text. The tools may send only the operations listed in [`operations.py`](pirate_ship_api_mcp/pirate_ship/operations.py), and account, password, payment method and identity operations are not on that list. When Pirate Ship changes one of the listed queries, the tool answers "Pirate Ship changed its app" until we record the new hash.
+Pirate Ship's web app sends each operation as a persisted query: its name and the sha256 of the query text. The tools may send only the operations listed in [`operations.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/pirate_ship_api_mcp/pirate_ship/operations.py), and account, password, payment method and identity operations are not on that list. When Pirate Ship changes one of the listed queries, the tool answers "Pirate Ship changed its app" until we record the new hash.
 
 Pirate Ship's session cookie lives about a day and is renewed by use. When Pirate Ship signs you out, the server reads the cookies from Chrome again, if Chrome is open with remote debugging on. Tick "Stay signed in" when you sign in, so Chrome keeps you signed in between visits.
 
@@ -78,7 +78,7 @@ pirate-ship-mcp --version
 
 With [uv](https://docs.astral.sh/uv/): `uv venv && uv pip install -e .`, then `uv run pirate-ship-mcp ...`.
 
-Setting it up with an AI agent (Claude Code, Codex, Cursor)? Open it in this folder and ask it to set up the repo: [`AGENTS.md`](AGENTS.md) tells it every step, and it asks you only for the steps in Chrome.
+Setting it up with an AI agent (Claude Code, Codex, Cursor)? Open it in this folder and ask it to set up the repo: [`AGENTS.md`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/AGENTS.md) tells it every step, and it asks you only for the steps in Chrome.
 
 To update: `git pull && pip install -e .`. We copy every change of the hosted Pirate Ship tools into this repo.
 
@@ -169,7 +169,7 @@ claude mcp add pirate-ship -- /path/to/pirate-ship-api-mcp-server/.venv/bin/pira
 
 ### Cursor
 
-`~/.cursor/mcp.json`, the same block as Claude Desktop. A ready copy is in [`mcp.json`](mcp.json).
+`~/.cursor/mcp.json`, the same block as Claude Desktop. A ready copy is in [`mcp.json`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/mcp.json).
 
 ### Codex
 
@@ -249,21 +249,21 @@ call("create_shipment", full_name="Linda Morales", address1="350 5th Ave", city=
 
 Or one tool from the shell: `pirate-ship-mcp call list_shipments limit=10`, or with a JSON object.
 
-Ready scripts in [`examples/`](examples/). Each prints JSON or a short report, takes `--out file.csv` or `--out file.json` where it makes sense, and `--help`:
+Ready scripts in [`examples/`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/). Each prints JSON or a short report, takes `--out file.csv` or `--out file.json` where it makes sense, and `--help`:
 
 | Script | What it does |
 |---|---|
-| [`compare_rates.py`](examples/compare_rates.py) | USPS and UPS rates for one package, cheapest first. `--size 10x8x4`, `--country`. |
-| [`draft_batch_from_csv.py`](examples/draft_batch_from_csv.py) | A CSV of recipients becomes one unpaid draft batch with a Saved Package; prints the rate of each group. Rows without an address are listed, not guessed. |
-| [`store_orders.py`](examples/store_orders.py) | Refreshes your connected stores and lists the orders waiting to ship. |
-| [`export_shipments.py`](examples/export_shipments.py) | Bought labels to CSV or JSON: recipient, tracking number, service, cost, status. `--since`, `--carrier`. |
-| [`tracking_report.py`](examples/tracking_report.py) | Labels of the last N days that are not delivered, with the last event and a `stuck` flag. |
-| [`refund_candidates.py`](examples/refund_candidates.py) | Duplicate labels and labels with no carrier scan in the 28-day refund window. Lists them; you refund in Pirate Ship. |
-| [`scan_form.py`](examples/scan_form.py) | The USPS SCAN Form for today's labels, as a PDF link. |
-| [`pickup_quote.py`](examples/pickup_quote.py) | Today's packages and weight per carrier, with the pickup price. Books nothing. |
-| [`carrier_adjustments.py`](examples/carrier_adjustments.py) | Carrier adjustments with the weight and size you entered next to what the carrier measured. |
-| [`spend_report.py`](examples/spend_report.py) | Labels, spend, savings, carrier split, top states and balance for a date range. `--transactions` saves every charge. |
-| [`ship_from_addresses.py`](examples/ship_from_addresses.py) | Your Ship From Addresses and Saved Packages with the ids other tools take. |
+| [`compare_rates.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/compare_rates.py) | USPS and UPS rates for one package, cheapest first. `--size 10x8x4`, `--country`. |
+| [`draft_batch_from_csv.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/draft_batch_from_csv.py) | A CSV of recipients becomes one unpaid draft batch with a Saved Package; prints the rate of each group. Rows without an address are listed, not guessed. |
+| [`store_orders.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/store_orders.py) | Refreshes your connected stores and lists the orders waiting to ship. |
+| [`export_shipments.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/export_shipments.py) | Bought labels to CSV or JSON: recipient, tracking number, service, cost, status. `--since`, `--carrier`. |
+| [`tracking_report.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/tracking_report.py) | Labels of the last N days that are not delivered, with the last event and a `stuck` flag. |
+| [`refund_candidates.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/refund_candidates.py) | Duplicate labels and labels with no carrier scan in the 28-day refund window. Lists them; you refund in Pirate Ship. |
+| [`scan_form.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/scan_form.py) | The USPS SCAN Form for today's labels, as a PDF link. |
+| [`pickup_quote.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/pickup_quote.py) | Today's packages and weight per carrier, with the pickup price. Books nothing. |
+| [`carrier_adjustments.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/carrier_adjustments.py) | Carrier adjustments with the weight and size you entered next to what the carrier measured. |
+| [`spend_report.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/spend_report.py) | Labels, spend, savings, carrier split, top states and balance for a date range. `--transactions` saves every charge. |
+| [`ship_from_addresses.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/ship_from_addresses.py) | Your Ship From Addresses and Saved Packages with the ids other tools take. |
 
 ```bash
 python examples/compare_rates.py --to-zip 94103 --weight-oz 32 --size 12x10x6
@@ -487,7 +487,7 @@ The source is public, the license is not an open source license: noncommercial u
 
 ## License
 
-[PolyForm Noncommercial License 1.0.0](LICENSE). In short:
+[PolyForm Noncommercial License 1.0.0](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/LICENSE). In short:
 
 - **Allowed:** noncommercial use: you, for your own personal purposes with your own Pirate Ship account, or a charity, school, public research or government body. Changing the code, and sharing it under the same license.
 - **Not allowed:** any commercial use, your own business included; client work; selling or offering it, or a service built on it.
@@ -498,7 +498,7 @@ The source is public, the license is not an open source license: noncommercial u
   <a href="https://cotlet.dev">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="assets/logo-white.svg">
-      <img src="assets/logo.svg" alt="Cotlet" width="120">
+      <img src="https://raw.githubusercontent.com/cotletdev/pirate-ship-api-mcp-server/main/assets/logo.svg" alt="Cotlet" width="120">
     </picture>
   </a>
 </p>
