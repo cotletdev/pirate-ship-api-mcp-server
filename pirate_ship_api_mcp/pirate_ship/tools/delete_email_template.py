@@ -23,7 +23,11 @@ INPUT_SCHEMA: dict[str, Any] = {
     title="Delete email template",
     access="write",
     confirm=False,
-    description="Removes a tracking email template.",
+    description="Delete one tracking email template from the account.",
+    details=(
+        "Removes the template for good; it cannot be restored. Tracking emails already sent are not changed. "
+        "To change a template's text instead, use update_email_template. Returns the deleted template's id."
+    ),
     input_schema=INPUT_SCHEMA,
     route="DELETE /email-templates/{template_id}",
     example_response={"deleted": "6800990"},

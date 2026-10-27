@@ -18,11 +18,11 @@ INPUT_SCHEMA: dict[str, Any] = {"type": "object", "properties": {}, "required": 
     title="Get label settings",
     access="read",
     confirm=False,
-    description="Label size and file format, packing list, logo, QR codes, address correction, export format.",
+    description="Read the account's label settings from Settings, General.",
     details=(
-        "The account's Settings, General: the size and file format new labels are made in, whether a packing "
-        "list prints with them, the logo on the label, USPS label-free QR codes, what happens when Pirate Ship "
-        "finds a better address, and the spreadsheet format of report exports."
+        "Returns the size and file format new labels are made in, whether a packing list prints with them, the "
+        "logo on the label, USPS label-free QR codes, what happens when Pirate Ship finds a better address, and "
+        "the spreadsheet format of report exports. Read it before update_label_settings, which changes them."
     ),
     input_schema=INPUT_SCHEMA,
     route="GET /label-settings",

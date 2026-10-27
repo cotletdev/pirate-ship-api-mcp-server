@@ -305,7 +305,7 @@ Money is in US dollars, weights in ounces, sizes in inches, dates in Chrome's ti
 | `get_batch` | read | `GET /batches/{batch_id}` | A draft or bought batch: shipments, tracking, rates to buy, what can be refunded. |
 | `list_batches` | read | `GET /batches` | Latest batches and single labels, newest first, with status and tracking counts. |
 | `change_ship_date` | write | `PUT /batches/{batch_id}/ship-date` | Moves a draft batch to another ship date and returns its new rates. |
-| `rename_batch` | write | `PATCH /batches/{batch_id}` | Changes a batch's title. |
+| `rename_batch` | write | `PATCH /batches/{batch_id}` | Change the title of a batch or single label. |
 | `delete_batch` | write | `DELETE /batches/{batch_id}` | Deletes an unpaid draft batch or single shipment. |
 
 ### Printing and SCAN Forms
@@ -334,7 +334,7 @@ Money is in US dollars, weights in ounces, sizes in inches, dates in Chrome's ti
 | `list_receipts` | read | `GET /receipts` | Payments made to Pirate Ship, newest first; get_receipt shows one. |
 | `get_receipt` | read | `GET /receipts/{receipt_id}` | One payment to Pirate Ship with its billing address and the labels it paid for. |
 | `list_refunds` | read | `GET /refunds` | Label refunds with their status and amount, newest request first. |
-| `list_return_labels` | read | `GET /return-labels` | Pay-on-use return labels and whether a customer used them. |
+| `list_return_labels` | read | `GET /return-labels` | List the account's pay-on-use return labels and whether each was used. |
 | `list_carrier_adjustments` | read | `GET /carrier-adjustments` | Extra charges or credits the carrier made after a label was used, with old and actual package. |
 | `export_report` | read | `GET /reports/{report}/export` | A CSV of the transactions, refunds, receipts, return labels or carrier adjustments report. |
 
@@ -353,7 +353,7 @@ Money is in US dollars, weights in ounces, sizes in inches, dates in Chrome's ti
 | `sync_store_orders` | write | `POST /import-orders/sync` | Pulls new orders from every connected store into Pirate Ship's Import list. |
 | `list_import_orders` | read | `GET /import-orders` | Unshipped orders from your connected store integrations, as in the Import grid. |
 | `ignore_orders` | write | `POST /import-orders/ignore` | Hides store orders from the Import list without shipping them. |
-| `unignore_orders` | write | `DELETE /import-orders/ignore` | Puts ignored store orders back on the Import list. |
+| `unignore_orders` | write | `DELETE /import-orders/ignore` | Put ignored store orders back on the Import list. |
 
 ### Ship From Addresses
 
@@ -372,24 +372,24 @@ Money is in US dollars, weights in ounces, sizes in inches, dates in Chrome's ti
 | `list_saved_packages` | read | `GET /saved-packages` | Your Saved Packages from Settings: size, weight and the extra services stored with each. |
 | `create_saved_package` | write | `POST /saved-packages` | Saves a package (type, size, weight, extra services) for reuse on labels. |
 | `update_saved_package` | write | `PATCH /saved-packages/{package_id}` | Changes a Saved Package; fields you leave out keep their values. |
-| `delete_saved_package` | write | `DELETE /saved-packages/{package_id}` | Removes a Saved Package. Labels made with it are not affected. |
+| `delete_saved_package` | write | `DELETE /saved-packages/{package_id}` | Delete a Saved Package (box size and weight preset) from the account. |
 
 ### Tracking emails
 
 | Tool | Access | REST route | What it does |
 |---|---|---|---|
-| `get_tracking_email_settings` | read | `GET /tracking-email-settings` | Whether recipients get tracking emails by default, how long after purchase, and the template. |
+| `get_tracking_email_settings` | read | `GET /tracking-email-settings` | Read whether label recipients get a tracking email, when, and with which template. |
 | `update_tracking_email_settings` | write | `PATCH /tracking-email-settings` | Turns default tracking emails on or off and sets their delay after purchase. |
-| `list_email_templates` | read | `GET /email-templates` | Tracking email templates: subject, sender, HTML body; one is the default. |
+| `list_email_templates` | read | `GET /email-templates` | List the templates of the tracking emails sent to label recipients. |
 | `create_email_template` | write | `POST /email-templates` | Adds a tracking email template for the emails recipients get with their tracking link. |
 | `update_email_template` | write | `PATCH /email-templates/{template_id}` | Changes a tracking email template; fields you leave out keep their values. |
-| `delete_email_template` | write | `DELETE /email-templates/{template_id}` | Removes a tracking email template. |
+| `delete_email_template` | write | `DELETE /email-templates/{template_id}` | Delete one tracking email template from the account. |
 
 ### Label settings
 
 | Tool | Access | REST route | What it does |
 |---|---|---|---|
-| `get_label_settings` | read | `GET /label-settings` | Label size and file format, packing list, logo, QR codes, address correction, export format. |
+| `get_label_settings` | read | `GET /label-settings` | Read the account's label settings from Settings, General. |
 | `update_label_settings` | write | `PATCH /label-settings` | Changes label size, file format, packing list, logo, QR codes, address correction or export format. |
 
 ### Not in this version
@@ -452,7 +452,7 @@ The REST API answers `{"error": "<code>", "message": "..."}`. The MCP server ret
 | Who may use it | you, for noncommercial use | teams, businesses, agencies |
 | Price | free | free 7-day trial with 2,000 credits, no card; then one-time packs from $29 for 5,000 credits |
 
-On the hosted version a successful call uses 20 to 30 credits (25 for most tools), failed calls are free, and the Cloud Browser uses 50 credits a day while it has an app enabled for agents. [Full pricing](https://cotlet.dev/pricing).
+On the hosted version a successful call uses 10 credits, failed calls are free, and the Cloud Browser uses 50 credits a day while it has an app enabled for agents. [Full pricing](https://cotlet.dev/pricing).
 
 ## FAQ
 

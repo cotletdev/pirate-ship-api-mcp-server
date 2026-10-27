@@ -31,7 +31,12 @@ INPUT_SCHEMA: dict[str, Any] = {
     title="Unignore orders",
     access="write",
     confirm=False,
-    description="Puts ignored store orders back on the Import list.",
+    description="Put ignored store orders back on the Import list.",
+    details=(
+        "Reverses ignore_orders: the orders show in list_import_orders again and create_batch_from_orders can "
+        "ship them. Up to 500 order ids per call; ids that are not ignored are skipped. Returns how many orders "
+        "came back and their ids."
+    ),
     input_schema=INPUT_SCHEMA,
     route="DELETE /import-orders/ignore",
     example_response={"count": 1, "order_ids": ["8812004"]},

@@ -19,15 +19,26 @@ if TYPE_CHECKING:
 
 PAGING_SCHEMA: dict[str, Any] = {
     "search": {"type": "string", "maxLength": 200, "description": "Free text, as in the report's search box."},
-    "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 25},
-    "offset": {"type": "integer", "minimum": 0, "default": 0},
+    "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100,
+        "default": 25,
+        "description": "Rows per page, 1 to 100.",
+    },
+    "offset": {
+        "type": "integer",
+        "minimum": 0,
+        "default": 0,
+        "description": "Rows to skip: the next page starts at offset + limit while it is below total.",
+    },
 }
 
 
 DATE_SCHEMA: dict[str, Any] = {
     "from_date": {"type": "string", "format": "date", "description": "First day, YYYY-MM-DD, in your timezone."},
     "to_date": {"type": "string", "format": "date", "description": "Last day, YYYY-MM-DD, included."},
-    "sort": {"type": "string", "enum": ["newest", "oldest"], "default": "newest"},
+    "sort": {"type": "string", "enum": ["newest", "oldest"], "default": "newest", "description": "Order by date."},
 }
 
 

@@ -2,7 +2,7 @@
 (ship.pirateship.com/assets/nextgen/assets/persistedQueryManifest-*.js), 18.10.2026.
 
 Only operations a tool uses are here, so client.graphql cannot send any other: account, security, payment
-method, billing and identity operations are left out on purpose . A hash changes only when
+method, billing and identity operations are left out on purpose. A hash changes only when
 Pirate Ship changes that query; PersistedQueryNotFound means a new recording of that operation.
 """
 

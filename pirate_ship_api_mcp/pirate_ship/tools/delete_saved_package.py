@@ -23,7 +23,11 @@ INPUT_SCHEMA: dict[str, Any] = {
     title="Delete saved package",
     access="write",
     confirm=False,
-    description="Removes a Saved Package. Labels made with it are not affected.",
+    description="Delete a Saved Package (box size and weight preset) from the account.",
+    details=(
+        "Removes it for good; labels already made with it are not affected. To change its size or weight "
+        "instead, use update_saved_package. Returns the deleted package's id."
+    ),
     input_schema=INPUT_SCHEMA,
     route="DELETE /saved-packages/{package_id}",
     example_response={"deleted": "518829001"},

@@ -56,11 +56,12 @@ async def tracking_settings(ctx: ToolContext) -> dict[str, Any]:
     title="Get tracking email settings",
     access="read",
     confirm=False,
-    description="Whether recipients get tracking emails by default, how long after purchase, and the template.",
+    description="Read whether label recipients get a tracking email, when, and with which template.",
     details=(
         "enabled: new labels send a tracking email to the recipient by default. delay: when it goes out after "
         "the label is bought (delay_label as Pirate Ship shows it). branding: Pirate Ship's branding in the "
-        "email. default_template_id: the template from list_email_templates used."
+        "email. default_template_id: the template from list_email_templates used. update_tracking_email_settings "
+        "changes these."
     ),
     input_schema=INPUT_SCHEMA,
     route="GET /tracking-email-settings",

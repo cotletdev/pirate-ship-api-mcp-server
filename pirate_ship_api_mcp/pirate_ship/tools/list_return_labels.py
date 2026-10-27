@@ -78,10 +78,12 @@ EXAMPLE_RESPONSE: dict[str, Any] = {
     title="List return labels",
     access="read",
     confirm=False,
-    description="Pay-on-use return labels and whether a customer used them.",
+    description="List the account's pay-on-use return labels and whether each was used.",
     details=(
-        "The Reports, Return Labels table: every return label made with a shipment, its status (unused labels"
-        " cost nothing), the address it goes back to and what was charged in US dollars when it was used."
+        "Returns total and a page of return_labels, newest first: shipment_id, created_at, status, the address "
+        "the parcel goes back to and amount_usd, what Pirate Ship charged when a customer used it (an unused "
+        "label costs nothing). Filter by date, status or search text and page with limit and offset. For the "
+        "outgoing labels themselves use list_shipments."
     ),
     input_schema=INPUT_SCHEMA,
     route="GET /return-labels",

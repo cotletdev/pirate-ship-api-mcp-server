@@ -24,11 +24,12 @@ async def templates(ctx: ToolContext) -> list[dict[str, Any]]:
     title="List email templates",
     access="read",
     confirm=False,
-    description="Tracking email templates: subject, sender, HTML body; one is the default.",
+    description="List the templates of the tracking emails sent to label recipients.",
     details=(
-        "The templates Pirate Ship uses for the tracking emails it sends to recipients of your labels: name, "
-        "subject, sender name and reply-to email, BCC address and the HTML body with placeholders such as "
-        "[Tracking #]. default marks the one used for new labels."
+        "Returns every template with its id, name, subject, sender name, reply-to email, BCC address and HTML "
+        "body with placeholders such as [Tracking #]; default marks the one used for new labels. Use the id in "
+        "update_email_template or delete_email_template. Whether emails go out at all and when is in "
+        "get_tracking_email_settings."
     ),
     input_schema=INPUT_SCHEMA,
     route="GET /email-templates",
