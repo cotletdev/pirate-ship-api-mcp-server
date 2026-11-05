@@ -1,8 +1,36 @@
-# Pirate Ship API and MCP server, self-hosted
+# Pirate Ship API and MCP server: connect Pirate Ship to ChatGPT and Claude
 
 <!-- mcp-name: dev.cotlet/pirate-ship -->
 
-A **Pirate Ship API** and a **Pirate Ship MCP server** you run on your own computer, in Python, on the session of your own Google Chrome. 51 of the 57 Pirate Ship tools we run in production at [Cotlet](https://cotlet.dev/integrations/pirate-ship-api-mcp-server): USPS and UPS rates, draft labels and batches, label downloads, SCAN Forms, shipments and tracking, reports, store order import, Ship From Addresses, Saved Packages, tracking emails and label settings. The six tools that spend or refund money are [not in this version](#not-in-this-version).
+**Yes, ChatGPT, Claude and other AI agents can work in your Pirate Ship account.** That includes Cursor, Codex, OpenClaw and any MCP client, plus automations in n8n, Make and Zapier. Ask in plain words, and the AI compares rates, creates USPS and UPS labels, checks tracking and reports what you spent on shipping. It shows you what it will do first and sends nothing to other people until you say so.
+
+This repo is the missing piece: 51 Pirate Ship tools for AI assistants and scripts.
+
+## What you can ask
+
+> *What does a 2 lb box, 12x10x6, cost to ZIP 94103 with USPS and UPS? Cheapest first.*
+>
+> *Make a draft batch from orders.csv with my "Small box" Saved Package and show me the rates per group.*
+>
+> *Which labels from the last 10 days still have no carrier scan?*
+>
+> *How much did I spend on labels in October, and what were the carrier adjustments?*
+
+## Two ways to get it
+
+| | [Ready to use, at Cotlet](https://cotlet.dev/integrations/pirate-ship-api-mcp-server?utm_source=github&utm_medium=readme&utm_campaign=pirate-ship&utm_content=two-ways) | Run it yourself, this repo |
+|---|---|---|
+| For | online sellers and small shops | developers |
+| Setup | sign in to Pirate Ship once, about 5 minutes, nothing to install | Python and a terminal |
+| Works in | ChatGPT and Claude apps, on your phone too, Cursor, Codex, OpenClaw, any MCP client, n8n, Make, Zapier, REST API | Claude Code, Claude Desktop, Cursor, Codex on your computer |
+| Runs | 24/7, your computer can be off | while your computer is on |
+| Price | 7 days free, no card | free |
+
+**[Start free at cotlet.dev →](https://cotlet.dev/signup?app=pirate-ship&utm_source=github&utm_medium=readme&utm_campaign=pirate-ship&utm_content=top-button)**
+
+## Run it yourself
+
+A **Pirate Ship API** and a **Pirate Ship MCP server** you run on your own computer, in Python, on the session of your own Google Chrome. 51 of the 57 Pirate Ship tools we run in production at [Cotlet](https://cotlet.dev/integrations/pirate-ship-api-mcp-server?utm_source=github&utm_medium=readme&utm_campaign=pirate-ship&utm_content=intro): USPS and UPS rates, draft labels and batches, label downloads, SCAN Forms, shipments and tracking, reports, store order import, Ship From Addresses, Saved Packages, tracking emails and label settings. The six tools that spend or refund money are [not in this version](#not-in-this-version).
 
 Pirate Ship has no public API and no official MCP server. This repo gives you both:
 
@@ -10,11 +38,11 @@ Pirate Ship has no public API and no official MCP server. This repo gives you bo
 - **REST API** on `http://127.0.0.1:8787/api/v1/pirate-ship`, with OpenAPI docs at `/docs`. [Setup](#rest-api)
 - **Python**: `call("get_rates", to_zip="10001", weight_oz=16)`, plus 11 ready scripts in [`examples/`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/examples/).
 
-It is for technical people who want to run it themselves, **for noncommercial use only** ([license](#license)). If you want it running 24/7 on a server, kept working when Pirate Ship changes its app, for a team or a business, use the [hosted version at cotlet.dev](https://cotlet.dev/integrations/pirate-ship-api-mcp-server).
+Free for your own use, your own business included ([license](#license)).
 
 [![Pirate Ship MCP server](https://img.shields.io/badge/Pirate%20Ship%20MCP-51%20tools-6d4aef)](#all-51-tools)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-141318)](#requirements)
-[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/license-PolyForm%20Noncommercial-141318)](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/LICENSE)
+[![License: Elastic 2.0](https://img.shields.io/badge/license-Elastic%202.0-141318)](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/LICENSE)
 [![MCP Badge](https://lobehub.com/badge/mcp/cotletdev-pirate-ship-api-mcp-server)](https://lobehub.com/mcp/cotletdev-pirate-ship-api-mcp-server)
 
 ```bash
@@ -26,6 +54,7 @@ claude mcp add pirate-ship -- uvx pirate-ship-api-mcp mcp
 
 ## Contents
 
+- [Questions from Pirate Ship users](#questions-from-pirate-ship-users)
 - [How it works](#how-it-works)
 - [Requirements](#requirements)
 - [Install](#install)
@@ -40,6 +69,41 @@ claude mcp add pirate-ship -- uvx pirate-ship-api-mcp mcp
 - [Self-hosted or hosted](#self-hosted-or-hosted)
 - [FAQ](#faq)
 - [License](#license)
+
+## Questions from Pirate Ship users
+
+**Does Pirate Ship have an API?**
+No. Pirate Ship has no API, no webhooks and no official MCP server (checked 11 Oct 2026). Its help center says so and points to the built-in store integrations and spreadsheet uploads instead. This repo and [Cotlet](https://cotlet.dev/integrations/pirate-ship-api-mcp-server?utm_source=github&utm_medium=readme&utm_campaign=pirate-ship&utm_content=faq-api) give you 51 Pirate Ship tools as a REST API and an MCP server.
+
+**Can I get a Pirate Ship API key?**
+Not from Pirate Ship for your own account. With Cotlet you get your own API key that works with your Pirate Ship account, for scripts, n8n, Make, Zapier or any HTTP client. This repo needs no key: it runs on your computer, on your own Pirate Ship session.
+
+**Is there an official ChatGPT integration for Pirate Ship?**
+No. Pirate Ship has no official ChatGPT or Claude connector. Cotlet is an unofficial one that works today, in the ChatGPT and Claude apps and in any AI agent that takes an MCP server.
+
+**How do I connect Pirate Ship to ChatGPT?**
+Sign up at [cotlet.dev](https://cotlet.dev/signup?app=pirate-ship&utm_source=github&utm_medium=readme&utm_campaign=pirate-ship&utm_content=faq-chatgpt), sign in to Pirate Ship once in your Cloud Browser there, and add Cotlet to ChatGPT, following the steps in your account. Then ask ChatGPT about your Pirate Ship like you would ask an assistant. ChatGPT needs a server on the internet, so this repo alone, running on your computer, does not connect to ChatGPT.
+
+**Can ChatGPT create shipping labels in Pirate Ship?**
+Yes, with Cotlet. Give it the address and package, and it compares rates, creates the label after your OK and gives you tracking. Labels are paid from your Pirate Ship balance as usual.
+
+**Can I automate Pirate Ship with Zapier, Make or n8n?**
+Pirate Ship has no API and no Zapier app. With Cotlet, n8n, Make and Zapier can compare rates, create labels and check tracking, for example for new orders in a sheet.
+
+**Can I use it from my phone?**
+Yes, with Cotlet: once it is set up, the ChatGPT and Claude apps on your phone can use Pirate Ship for you.
+
+**Do I need to be technical?**
+For Cotlet, no: you sign in to Pirate Ship and add Cotlet to ChatGPT or Claude, with step-by-step instructions in your account. This repo is for people who are fine with Python and a terminal.
+
+**Is my Pirate Ship account safe?**
+Yes. Neither Cotlet nor this repo sees or stores your Pirate Ship password. You sign in yourself, the way you always do, and the AI works on that signed-in session. Anything that reaches other people asks for your OK first: in Cotlet by default, here through your MCP client.
+
+**Is it free?**
+This repo is free, also in your own business. Cotlet is free for 7 days with no card, then one-time credit packs from $29, no subscription. [Pricing](https://cotlet.dev/pricing?utm_source=github&utm_medium=readme&utm_campaign=pirate-ship&utm_content=faq-price).
+
+**I manage Pirate Ship for several accounts or clients. Does that work?**
+Yes, with Cotlet. Each Pirate Ship login gets its own connection. Write to [contact@cotlet.dev](mailto:contact@cotlet.dev) and tell us how many accounts you manage.
 
 ## How it works
 
@@ -441,7 +505,7 @@ The REST API answers `{"error": "<code>", "message": "..."}`. The MCP server ret
 
 ## Self-hosted or hosted
 
-| | This repo | [Cotlet, hosted](https://cotlet.dev/integrations/pirate-ship-api-mcp-server) |
+| | This repo | [Cotlet, hosted](https://cotlet.dev/integrations/pirate-ship-api-mcp-server?utm_source=github&utm_medium=readme&utm_campaign=pirate-ship&utm_content=compare) |
 |---|---|---|
 | Tools | 51 | all 57, with buying, refunds, pickups and disputes |
 | Runs | on your computer, while it is on | in the cloud, 24/7 |
@@ -449,15 +513,12 @@ The REST API answers `{"error": "<code>", "message": "..."}`. The MCP server ret
 | When Pirate Ship changes its app | `git pull` once we have fixed it | fixed for you, every tool tested daily |
 | Approvals | your MCP client asks per call | purchases and refunds wait for your OK, switchable per tool |
 | Works with | MCP clients on your machine, local scripts | Claude.ai and ChatGPT connectors, n8n, Make, Zapier, any HTTP client |
-| Who may use it | you, for noncommercial use | teams, businesses, agencies |
+| Who may use it | you and your own business | you, teams, businesses, agencies |
 | Price | free | free 7-day trial with 2,000 credits, no card; then one-time packs from $29 for 5,000 credits |
 
 On the hosted version a successful call uses 10 credits, failed calls are free, and the Cloud Browser uses 50 credits a day while it has an app enabled for agents. [Full pricing](https://cotlet.dev/pricing).
 
 ## FAQ
-
-**Does Pirate Ship have an official API?**
-No. Pirate Ship has no API, no webhooks and no official MCP server (checked 11 Oct 2026). Its help center says so and points to the built-in store integrations and spreadsheet uploads instead. Details: [cotlet.dev/integrations/pirate-ship-api-mcp-server](https://cotlet.dev/integrations/pirate-ship-api-mcp-server).
 
 **Is there a Pirate Ship MCP server for Claude, ChatGPT or Cursor?**
 Yes, this one runs on your machine: `pirate-ship-mcp mcp` for Claude Code, Claude Desktop, Cursor and Codex. ChatGPT and Claude.ai connectors need a public HTTPS URL, which the [hosted Pirate Ship MCP server](https://cotlet.dev/integrations/pirate-ship-api-mcp-server) gives you.
@@ -487,20 +548,20 @@ Technically yes, with `PIRATE_SHIP_AUTH_TOKEN`. The cookie lasts about a day wit
 Requests carry Chrome's fingerprint and go out one at a time, as you would click. Nobody can promise a platform never acts. Keep to your normal use.
 
 **Can I use it at work or for my clients?**
-No, the license allows noncommercial use only. For a team, a company or client work, use [Cotlet](https://cotlet.dev) or write to [contact@cotlet.dev](mailto:contact@cotlet.dev).
+At work and in your own business, yes, free. You may not offer it to others as a hosted or managed service. For client work, use [Cotlet](https://cotlet.dev?utm_source=github&utm_medium=readme&utm_campaign=pirate-ship&utm_content=faq-clients) or write to [contact@cotlet.dev](mailto:contact@cotlet.dev).
 
 **Is it open source?**
-The source is public, the license is not an open source license: noncommercial use only, no business use.
+The source is public under the Elastic License 2.0: free to use and change, also in your own business, but not to resell as a hosted service.
 
 **A tool broke or I need another one.**
 [Open an issue](https://github.com/cotletdev/pirate-ship-api-mcp-server/issues) with the tool name and the error message.
 
 ## License
 
-[PolyForm Noncommercial License 1.0.0](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/LICENSE). In short:
+[Elastic License 2.0](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/LICENSE). In short:
 
-- **Allowed:** noncommercial use: you, for your own personal purposes with your own Pirate Ship account, or a charity, school, public research or government body. Changing the code, and sharing it under the same license.
-- **Not allowed:** any commercial use, your own business included; client work; selling or offering it, or a service built on it.
+- **Allowed:** using it for yourself and in your own business, free. Changing the code and sharing it under the same license.
+- **Not allowed:** offering it to others as a hosted or managed service, removing the license notices, getting around its limits.
 
 ---
 
@@ -513,4 +574,4 @@ The source is public, the license is not an open source license: noncommercial u
   </a>
 </p>
 
-Maintained by [Cotlet](https://cotlet.dev) ([@cotletdev](https://x.com/cotletdev)). Pirate Ship is a trademark of its owner. This project is unofficial and not affiliated with, endorsed or sponsored by Pirate Ship.
+Maintained by [Cotlet](https://cotlet.dev?utm_source=github&utm_medium=readme&utm_campaign=pirate-ship&utm_content=footer) ([@cotletdev](https://x.com/cotletdev)). Pirate Ship is a trademark of its owner. This project is unofficial and not affiliated with, endorsed or sponsored by Pirate Ship.
