@@ -47,7 +47,7 @@ Free for your own use, your own business included ([license](#license)).
 [![License: Elastic 2.0](https://img.shields.io/badge/license-Elastic%202.0-141318)](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/LICENSE)
 [![MCP Badge](https://lobehub.com/badge/mcp/cotletdev-pirate-ship-api-mcp-server)](https://lobehub.com/mcp/cotletdev-pirate-ship-api-mcp-server)
 
-Also on Odel: https://odel.app/modules/cotlet/pirate-ship
+Also on Odel: https://odel.app/modules/cotlet/pirate-ship and mcpbeat: https://mcpbeat.com/mcp-servers/cotlet/pirate-ship/
 
 ```bash
 uv tool install pirate-ship-api-mcp                  # or: pip install pirate-ship-api-mcp
