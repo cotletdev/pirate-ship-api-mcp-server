@@ -24,7 +24,7 @@ Do the steps yourself. Ask the user only for what needs their hands in Chrome.
    On Windows the path is `.venv\Scripts\pirate-ship-mcp`. With uv: `uv venv && uv pip install -e .`.
 3. Ask the user to do two things in Chrome. You cannot open `chrome://` pages for them.
    - Open `chrome://inspect/#remote-debugging` and switch remote debugging on.
-   - Be signed in at https://ship.pirateship.com, with "Stay signed in" ticked.
+   - Sign in at https://ship.pirateship.com, with "Stay signed in" ticked, and leave the tab open.
 4. Run `.venv/bin/pirate-ship-mcp connect`. Tell the user to click **Allow** when Chrome asks about the connection. Success prints `Signed in to Pirate Ship as <name> (<email>)`.
 5. Check: `.venv/bin/pirate-ship-mcp status`, then `.venv/bin/pirate-ship-mcp call get_account_balance`.
 6. Add the MCP server to the user's client. Use the absolute path of `.venv/bin/pirate-ship-mcp`:
@@ -74,4 +74,4 @@ Errors come as `<code>: <message>`. `auth_expired` means Pirate Ship signed the 
 
 A new tool is a new file in `pirate_ship_api_mcp/pirate_ship/tools/` with a `@tool(...)` declaration (name, access, input schema, `route`). The registry finds it, and the REST API, the MCP server and the CLI show it without other changes. A new GraphQL operation also needs its name and sha256 in `operations.py`.
 
-There is no test suite. After a change, run `.venv/bin/pirate-ship-mcp tools` and one read tool against the user's account.
+Run `.venv/bin/python -m unittest discover -s tests` for the offline cookie scope tests. After a change, run `.venv/bin/pirate-ship-mcp tools` and one read tool against the user's account.

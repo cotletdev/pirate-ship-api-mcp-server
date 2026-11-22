@@ -43,8 +43,9 @@ class HttpResponse:
 
 
 def allowed_host(url: str) -> bool:
-    host = (urlsplit(url).hostname or "").lower()
-    return any(host == domain or host.endswith(f".{domain}") for domain in DOMAINS)
+    parsed = urlsplit(url)
+    host = (parsed.hostname or "").lower()
+    return parsed.scheme == "https" and any(host == domain or host.endswith(f".{domain}") for domain in DOMAINS)
 
 
 def impersonate_target(chrome_major: int | None) -> str:
@@ -110,7 +111,7 @@ class ToolContext:
             self._http = AsyncSession(impersonate=target, proxy=self.session.proxy or None, headers=headers)  # pyright: ignore[reportArgumentType] - target is a BrowserType value
             for cookie in self.session.cookies:
                 self._http.cookies.set(
-                    cookie["name"], cookie["value"], domain=cookie["domain"], path=cookie.get("path", "/")
+                    cookie["name"], cookie["value"], domain=cookie["domain"], path=cookie.get("path", "/"), secure=True
                 )
         return self._http
 
@@ -120,7 +121,7 @@ class ToolContext:
         Writes to your account settings in the app are refused before they leave (account_guard).
         """
         if not allowed_host(url):
-            raise ToolError(f"Request outside {app.DOMAINS[0]}.", ErrorCode.INTERNAL_ERROR)
+            raise ToolError(f"Request must use HTTPS on {app.DOMAINS[0]}.", ErrorCode.INTERNAL_ERROR)
         check_account_write(method, url)
         client = self._client()
         method = method.upper()
@@ -149,7 +150,7 @@ class ToolContext:
                 break
             url = urljoin(str(raw.url), location)
             if not allowed_host(url):
-                raise ToolError(f"{app.NAME} redirected outside {app.DOMAINS[0]}.", ErrorCode.TARGET_ERROR)
+                raise ToolError(f"{app.NAME} redirected outside HTTPS on {app.DOMAINS[0]}.", ErrorCode.TARGET_ERROR)
             params = None
             if raw.status_code == 303 or (raw.status_code in (301, 302) and method == "POST"):
                 method, json, data = "GET", None, None
