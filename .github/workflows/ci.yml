@@ -17,6 +17,8 @@ jobs:
         run: uv sync
       - name: Compile
         run: uv run python -m compileall -q pirate_ship_api_mcp
+      - name: Cookie scope tests
+        run: uv run python -m unittest discover -s tests
       - name: MCP server starts and lists its tools
         run: |
           uv run python - <<'PY'

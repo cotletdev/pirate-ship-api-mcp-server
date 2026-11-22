@@ -118,7 +118,7 @@ AI agent (MCP) / script (REST, Python) ──▶ pirate-ship-mcp on your compute
 ```
 
 1. You sign in to Pirate Ship in your own Chrome, the way you always do.
-2. `pirate-ship-mcp connect` attaches to that Chrome through the Chrome DevTools Protocol, reads the pirateship.com cookies and Chrome's time zone, and saves them to `~/.config/pirate-ship-api-mcp/session.json`, readable by your user only. It never sees or stores your password.
+2. `pirate-ship-mcp connect` attaches to the open Pirate Ship tab through the Chrome DevTools Protocol. Chrome returns only cookies that apply to the Pirate Ship API URL; the CLI saves only the declared Pirate Ship session cookie and the browser's time zone to `~/.config/pirate-ship-api-mcp/session.json`, readable by your user only. It never sees or stores your password.
 3. Every tool call is one of the GraphQL operations Pirate Ship's own web app sends to `ship.pirateship.com/api/graphql`, with those cookies, sent with [curl_cffi](https://github.com/lexiforest/curl_cffi), which copies Chrome's TLS fingerprint. No headless browser runs.
 
 Pirate Ship's web app sends each operation as a persisted query: its name and the sha256 of the query text. The tools may send only the operations listed in [`operations.py`](https://github.com/cotletdev/pirate-ship-api-mcp-server/blob/main/pirate_ship_api_mcp/pirate_ship/operations.py), and account, password, payment method and identity operations are not on that list. When Pirate Ship changes one of the listed queries, the tool answers "Pirate Ship changed its app" until we record the new hash.
@@ -165,7 +165,7 @@ To update: `uv tool upgrade pirate-ship-api-mcp` (or `pip install -U pirate-ship
 ### Option A: your everyday Chrome (recommended)
 
 1. Open `chrome://inspect/#remote-debugging` in Chrome and switch **remote debugging** on. Chrome then accepts DevTools connections from programs on this computer, and asks you before each one.
-2. Make sure you are signed in at [ship.pirateship.com](https://ship.pirateship.com).
+2. Open [ship.pirateship.com](https://ship.pirateship.com), sign in, and leave the tab open.
 3. Run:
 
    ```bash
@@ -175,7 +175,7 @@ To update: `uv tool upgrade pirate-ship-api-mcp` (or `pip install -U pirate-ship
 4. Chrome asks whether to allow the connection. Click **Allow**.
 
 ```text
-Saved 32 Pirate Ship cookies to /Users/you/.config/pirate-ship-api-mcp/session.json
+Saved 1 Pirate Ship cookies to /Users/you/.config/pirate-ship-api-mcp/session.json
 Signed in to Pirate Ship as Linda Morales (linda@example.com)
 ```
 
@@ -485,10 +485,10 @@ In tool descriptions "buy it with buy_label" means: buy the draft in Pirate Ship
 
 ## Security and your Pirate Ship account
 
-- **Your password never reaches this code.** Only cookies are read, and only those of pirateship.com.
+- **Your password never reaches this code.** Chrome scopes the lookup to the Pirate Ship API URL, and the CLI retains only the session cookie, not unrelated Pirate Ship cookies.
 - **The session file is yours.** `session.json` is created with mode 0600. Anyone who has it can act as you on Pirate Ship, so keep it out of git and shared folders.
 - **Local by default.** `serve` binds to `127.0.0.1` and refuses another address without `PIRATE_SHIP_MCP_TOKEN`.
-- **pirateship.com only.** Requests and redirects outside pirateship.com are refused.
+- **HTTPS on pirateship.com only.** Cross-domain redirects and redirects that downgrade to HTTP are refused.
 - **No tool moves money.** None buys a label, requests a refund, books a paid pickup or touches your payment methods.
 - **Read-only mode.** `--read-only` or `PIRATE_SHIP_MCP_READ_ONLY=1` exposes the 29 read tools only.
 - **Some changes reach your recipients.** Tracking email settings and templates change the emails your customers get. MCP clients ask before those tools run; a script does not.

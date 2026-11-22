@@ -16,6 +16,8 @@ DOMAINS = ("pirateship.com",)
 SESSION_COOKIES = ("pirate_id_f0fecf84",)
 COOKIE_DOMAIN = "ship.pirateship.com"
 LOGIN_URL = "https://ship.pirateship.com/"
+# Ask Chrome only for cookies that would apply to the authenticated API request.
+SESSION_COOKIE_URL = f"{LOGIN_URL}api/graphql"
 # A final URL with one of these means the app signed the session out.
 LOGGED_OUT_MARKERS = ("/login",)
 # Pirate Ship answers every call on one GraphQL path, so no account path to refuse here: the allowlist of

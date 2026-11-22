@@ -30,6 +30,25 @@ from pirate_ship_api_mcp.core.errors import ErrorCode, ToolError
 SESSION_COOKIE = app.SESSION_COOKIES[0]
 
 
+def _session_cookies(cookies: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep only declared session cookie names on the app host or its official parent domain."""
+    allowed_domains = {app.COOKIE_DOMAIN, *app.DOMAINS}
+    selected = []
+    for cookie in cookies:
+        if not isinstance(cookie, dict):
+            continue
+        name, value, domain = (cookie.get(key) for key in ("name", "value", "domain"))
+        if (
+            name in app.SESSION_COOKIES
+            and isinstance(value, str)
+            and value
+            and isinstance(domain, str)
+            and domain.lower().removeprefix(".") in allowed_domains
+        ):
+            selected.append({"name": name, "value": value, "domain": domain, "path": cookie.get("path") or "/"})
+    return selected
+
+
 def home() -> Path:
     """Where the session is kept: $<ENV>_MCP_HOME, or ~/.config/<slug>-api-mcp."""
     return Path(os.environ.get(f"{app.ENV}_MCP_HOME") or Path.home() / ".config" / f"{app.SLUG}-api-mcp")
@@ -63,6 +82,7 @@ def load() -> Session:
     if path.exists():
         data = json.loads(path.read_text(encoding="utf-8"))
         session = Session(**{k: v for k, v in data.items() if k in Session.__dataclass_fields__})
+        session.cookies = _session_cookies(session.cookies)
     if token := os.environ.get(f"{app.ENV}_AUTH_TOKEN", "").strip():
         session.cookies = [c for c in session.cookies if c["name"] != SESSION_COOKIE]
         session.cookies.append({"name": SESSION_COOKIE, "value": token, "domain": app.COOKIE_DOMAIN, "path": "/"})
@@ -77,7 +97,7 @@ def save(session: Session) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, stat.S_IRUSR | stat.S_IWUSR)
     with os.fdopen(fd, "w", encoding="utf-8") as fh:
-        json.dump(asdict(session), fh, indent=2)
+        json.dump({**asdict(session), "cookies": _session_cookies(session.cookies)}, fh, indent=2)
     os.chmod(path, stat.S_IRUSR | stat.S_IWUSR)
     return path
 
@@ -167,26 +187,28 @@ def system_timezone() -> str:
     return target.split("zoneinfo/", 1)[1] if "zoneinfo/" in target else "UTC"
 
 
-def _chrome_timezone(client: _Cdp) -> str | None:
-    """Chrome's own time zone, read in one of its open tabs. Nothing in the tab changes."""
+def _chrome_timezone(client: _Cdp, session_id: str) -> str | None:
+    """Chrome's own time zone, read in the already attached app tab."""
     try:
-        pages = [t for t in client.send("Target.getTargets").get("targetInfos") or [] if t.get("type") == "page"]
-        if not pages:
-            return None
-        attached = client.send("Target.attachToTarget", {"targetId": pages[0]["targetId"], "flatten": True})
-        session_id = attached["sessionId"]
-        try:
-            result = client.send(
-                "Runtime.evaluate",
-                {"expression": "Intl.DateTimeFormat().resolvedOptions().timeZone", "returnByValue": True},
-                session_id,
-            )
-        finally:
-            client.send("Target.detachFromTarget", {"sessionId": session_id})
+        result = client.send(
+            "Runtime.evaluate",
+            {"expression": "Intl.DateTimeFormat().resolvedOptions().timeZone", "returnByValue": True},
+            session_id,
+        )
         value = (result.get("result") or {}).get("value")
         return value if isinstance(value, str) and value else None
     except (ToolError, KeyError, TimeoutError):
         return None
+
+
+def _app_page(target: dict[str, Any]) -> bool:
+    if target.get("type") != "page":
+        return False
+    try:
+        url = urlsplit(target.get("url", ""))
+        return url.scheme == "https" and url.hostname == app.COOKIE_DOMAIN and url.port in (None, 443)
+    except ValueError:
+        return False
 
 
 def from_chrome(cdp: str | None = None, profile_dir: str | None = None) -> Session:
@@ -202,19 +224,28 @@ def from_chrome(cdp: str | None = None, profile_dir: str | None = None) -> Sessi
         ) from exc
     try:
         version = client.send("Browser.getVersion")
-        cookies = client.send("Storage.getCookies").get("cookies") or []
-        timezone = _chrome_timezone(client)
+        pages = [target for target in client.send("Target.getTargets").get("targetInfos", []) if _app_page(target)]
+        if not pages:
+            raise ToolError(f"Open the signed-in {app.NAME} tab at {app.LOGIN_URL}, then retry.", ErrorCode.AUTH_REQUIRED)
+        if len({page.get("browserContextId") for page in pages}) > 1:
+            raise ToolError(
+                f"{app.NAME} tabs are open in multiple Chrome profiles. Leave it open only in the intended profile, then retry.",
+                ErrorCode.AUTH_REQUIRED,
+            )
+        attached = client.send("Target.attachToTarget", {"targetId": pages[0]["targetId"], "flatten": True})
+        session_id = attached["sessionId"]
+        try:
+            # The browser filters by URL before returning any cookie values.
+            cookies = client.send("Network.getCookies", {"urls": [app.SESSION_COOKIE_URL]}, session_id).get("cookies", [])
+            timezone = _chrome_timezone(client, session_id)
+        finally:
+            client.send("Target.detachFromTarget", {"sessionId": session_id})
     finally:
         client.close()
-    mine = [
-        {"name": c["name"], "value": c["value"], "domain": c["domain"], "path": c.get("path") or "/"}
-        for c in cookies
-        if any(c.get("domain", "").lstrip(".").endswith(domain) for domain in app.DOMAINS)
-    ]
     user_agent = version.get("userAgent")
     match = re.search(r"Chrome/(\d+)", user_agent or "") or re.search(r"/(\d+)\.", version.get("product", ""))
     session = Session(
-        cookies=mine,
+        cookies=_session_cookies(cookies),
         user_agent=user_agent,
         chrome_major=int(match.group(1)) if match else None,
         source=cdp or "auto",
